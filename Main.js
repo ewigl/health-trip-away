@@ -137,7 +137,7 @@ async function Main() {
     let addTempResult = await addTempRecord(tempCard, Cookie)
     console.log("Done...");
     // 提交结果
-    console.log("addTempResult： ", addTempResult.data);
+    console.log("addTempResult： ", addTempResult);
 
     let healthCard = {
         cardTemp: temperature,
