@@ -1,4 +1,5 @@
 const axios = require('axios')
+const moment = require('moment-timezone')
 
 // 命令行参数
 const args = process.argv.slice(2)
@@ -87,6 +88,8 @@ async function Main() {
     // let Cookie = await Login(tempCookie)
     // console.log("Done.\n");
     // console.log("Cookie: \n", Cookie, "\n");
+    let now = moment(new Date()).tz('Asia/Shanghai').format("yyyy-MM-DD HH:mm")
+    console.log("Now", now);
     let temperature = (Math.random() * (36.8 - 36.2) + 36.2).toFixed(1).toString()
     let tempCard = {
         field1: "腋温",
