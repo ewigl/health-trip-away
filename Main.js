@@ -3,7 +3,6 @@ const moment = require('moment-timezone')
 
 // 命令行参数
 const args = process.argv.slice(2)
-// console.log(args[0]);
 
 const api = {
     queryUser: 'https://health.tripaway.cn/staffs/queryUser',
@@ -102,7 +101,6 @@ function addHealthCard(healthCard, Cookie) {
         },
         data: healthCard
     }).then((res) => {
-        // console.log(res.data);
         return res.data
     }).catch((err) => {
         console.log(err);
@@ -124,9 +122,7 @@ async function Main() {
     console.log("Getting Full Cookie...");
     let Cookie = await Login(tempCookie)
     console.log("Done.\n");
-    // console.log("Cookie: \n", Cookie, "\n");
 
-    // 当前时间
     // 随机体温
     let temperature = (Math.random() * (36.8 - 36.2) + 36.2).toFixed(1).toString()
     // 体温表
