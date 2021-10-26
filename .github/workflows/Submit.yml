@@ -2,7 +2,10 @@ name: HealthTripAway_node_Submit
 
 on:
   watch:
-    type: started
+#     type: started
+
+  schedule:
+    - cron: "0 23 * * *"
 
 jobs:
   Submit:
