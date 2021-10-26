@@ -8,11 +8,14 @@ const args = process.argv.slice(2)
 const api = {
     queryUser: 'https://health.tripaway.cn/staffs/queryUser',
     login: "https://health.tripaway.cn/login",
+    addTempRecord: "https://health.tripaway.cn/tempRecord/add",
+    addHealthCard: "https://health.tripaway.cn/healthCard/add"
 }
 
 const userInfo = {
     name: args[0],
-    passwd: args[1]
+    passwd: args[1],
+    signName: args[2]
 }
 
 // 日期格式化函数
@@ -74,30 +77,87 @@ function Login(Cookie) {
     })
 }
 
+function addTempRecord(tempCard, Cookie) {
+    return axios({
+        method: 'post',
+        url: api.addTempRecord,
+        headers: {
+            "Cookie": Cookie
+        },
+        data: tempCard
+    }).then((res) => {
+        // console.log(res.data);
+        return res.data
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
+function addHealthCard(healthCard, Cookie) {
+    return axios({
+        method: 'post',
+        url: api.addHealthCard,
+        headers: {
+            "Cookie": Cookie
+        },
+        data: healthCard
+    }).then((res) => {
+        // console.log(res.data);
+        return res.data
+    }).catch((err) => {
+        console.log(err);
+    })
+
+}
+
 async function Main() {
-    // // 获取route
-    // console.log("Getting route...");
-    // let headers_data = await queryUser()
-    // console.log("Done.\n");
-    // let tempCookie = `healthLastLoginTime=${headers_data.data[0].passwd}` +
-    //     `; healthLastLoginName1=${encodeURI(headers_data.data[0].loginName)}` +
-    //     `; ${headers_data.headers['set-cookie'][0].split(";")[0]}`
-    // // console.log("tempCookie", tempCookie);
-    // // 获取JSESSIONID拼接完整Cookie
-    // console.log("Getting Full Cookie...");
-    // let Cookie = await Login(tempCookie)
-    // console.log("Done.\n");
+    // 获取route
+    console.log("Getting route...");
+    let headers_data = await queryUser()
+    console.log("Done.\n");
+
+    let tempCookie = `healthLastLoginTime=${headers_data.data[0].passwd}` +
+        `; healthLastLoginName1=${encodeURI(headers_data.data[0].loginName)}` +
+        `; ${headers_data.headers['set-cookie'][0].split(";")[0]}`
+
+    // 获取JSESSIONID拼接完整Cookie
+    console.log("Getting Full Cookie...");
+    let Cookie = await Login(tempCookie)
+    console.log("Done.\n");
     // console.log("Cookie: \n", Cookie, "\n");
-    let now = moment(new Date()).tz('Asia/Shanghai').format("yyyy-MM-DD HH:mm")
-    console.log("Now", now);
+
+    // 当前时间
+    // 随机体温
     let temperature = (Math.random() * (36.8 - 36.2) + 36.2).toFixed(1).toString()
+    // 体温表
     let tempCard = {
         field1: "腋温",
-        recordTimeStr: new Date().format("yyyy-MM-dd hh:mm"),
+        recordTimeStr: moment(new Date()).tz('Asia/Shanghai').format("yyyy-MM-DD HH:mm"),
         remark: "健康，无以下状况,",
         temp: temperature
     }
-    console.log("tempCard", tempCard);
+    // 提交
+    console.log("Submit TemperatureRecord...");
+    let addTempResult = await addTempRecord(tempCard, Cookie)
+    console.log("Done...");
+    // 提交结果
+    console.log("addTempResult： ", addTempResult.data);
+
+    let healthCard = {
+        cardTemp: temperature,
+        familyHealth: "",
+        healthDesc: "",
+        isFamilyHealth: "健康",
+        isHealth: "健康",
+        isTouched: "无",
+        signDate: moment(new Date()).tz('Asia/Shanghai').format("yyyy年MM月DD日"),
+        signName: userInfo.signName,
+        type: "new"
+    }
+
+    let addHealthResult = await addHealthCard(healthCard, Cookie)
+    console.log("addHealthResult: ", addHealthResult);
+
 }
 
 Main()
