@@ -5,7 +5,8 @@ on:
 #     type: started
 
   schedule:
-    - cron: "0 23 * * *"
+    - cron: "8 23 * * *"
+    - cron: "8 10 * * *"
 
 jobs:
   Submit:
