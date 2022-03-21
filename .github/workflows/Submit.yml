@@ -1,4 +1,4 @@
-name: HealthTripAway_node_Submit
+name: HealthTripAway_Submit
 
 on:
   watch:
